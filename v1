@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CashApp Clone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: white;
+            margin: 0;
+            padding: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+        }
+        .section {
+            background: #121212;
+            width: 100%;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+        .balance {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .subtext {
+            color: gray;
+            font-size: 14px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        .button {
+            background: #222;
+            color: white;
+            padding: 12px;
+            width: 48%;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+        }
+        .button:hover {
+            background: #333;
+        }
+        .highlight {
+            background: #00d632;
+            color: black;
+        }
+        .nav {
+            display: flex;
+            justify-content: space-around;
+            background: #121212;
+            padding: 15px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 400px;
+        }
+        .nav button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .withdraw-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        .withdraw-slider {
+            width: 80%;
+            height: 40px;
+        }
+        .withdraw-button {
+            background: #00d632;
+            color: black;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Money</h2>
+        <div class="section">
+            <p class="subtext">Cash balance</p>
+            <p class="balance">$<span id="balance">500.00</span></p>
+            <p class="subtext">Account **** Routing ***</p>
+            <div class="buttons">
+                <button class="button highlight" onclick="addMoney()">Add money</button>
+                <button class="button" onclick="openWithdrawScreen()">Withdraw</button>
+            </div>
+        </div>
+    </div>
+    <div class="nav">
+        <button>🏠</button>
+        <button>📷</button>
+        <button>$</button>
+        <button>🔍</button>
+        <button>🔔</button>
+    </div>
+    <div id="withdraw-screen" class="withdraw-screen">
+        <p>Select amount to withdraw</p>
+        <input type="range" id="withdraw-slider" class="withdraw-slider" min="0" max="500" step="1" value="0" oninput="updateWithdrawAmount()">
+        <p id="withdraw-amount">Withdraw: $0</p>
+        <button class="withdraw-button" onclick="withdrawMoney()">Withdraw</button>
+        <button class="button" onclick="closeWithdrawScreen()">Cancel</button>
+    </div>
+    <script>
+        let balance = localStorage.getItem("balance") ? parseFloat(localStorage.getItem("balance")) : 500;
+        updateBalance();
+        function addMoney() {
+            let amount = prompt("Enter amount to add:");
+            amount = parseFloat(amount);
+            if (!isNaN(amount) && amount > 0) {
+                balance += amount;
+                saveBalance();
+            }
+        }
+        function openWithdrawScreen() {
+            document.getElementById("withdraw-screen").style.display = "flex";
+            document.getElementById("withdraw-slider").max = balance;
+        }
+        function closeWithdrawScreen() {
+            document.getElementById("withdraw-screen").style.display = "none";
+        }
+        function updateWithdrawAmount() {
+            let amount = document.getElementById("withdraw-slider").value;
+            document.getElementById("withdraw-amount").innerText = `Withdraw: $${amount}`;
+        }
+        function withdrawMoney() {
+            let amount = parseFloat(document.getElementById("withdraw-slider").value);
+            if (amount > 0 && amount <= balance) {
+                balance -= amount;
+                saveBalance();
+                closeWithdrawScreen();
+                alert("You withdrew $" + amount);
+            } else {
+                alert("Invalid amount");
+            }
+        }
+        function saveBalance() {
+            localStorage.setItem("balance", balance);
+            updateBalance();
+        }
+        function updateBalance() {
+            document.getElementById('balance').innerText = balance.toFixed(2);
+        }
+    </script>
+</body>
+</html>
