@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CashApp Clone</title>
+    <title>Cash App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,30 +29,31 @@
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 15px;
+            text-align: center;
         }
         .balance {
-            font-size: 24px;
+            font-size: 40px;
             font-weight: bold;
+            margin-top: 10px;
         }
         .subtext {
             color: gray;
-            font-size: 14px;
+            font-size: 16px;
         }
         .buttons {
             display: flex;
             justify-content: space-between;
-            margin-top: 15px;
+            margin-top: 20px;
         }
         .button {
             background: #222;
             color: white;
-            padding: 12px;
+            padding: 15px;
             width: 48%;
             border: none;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
-            text-align: center;
             cursor: pointer;
         }
         .button:hover {
@@ -65,18 +66,19 @@
         .nav {
             display: flex;
             justify-content: space-around;
-            background: #121212;
+            background: #000;
             padding: 15px 0;
             position: fixed;
             bottom: 0;
             width: 100%;
             max-width: 400px;
+            border-top: 1px solid #222;
         }
         .nav button {
             background: none;
             border: none;
             color: white;
-            font-size: 18px;
+            font-size: 22px;
             cursor: pointer;
         }
         .withdraw-screen {
@@ -86,26 +88,27 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 100;
         }
         .withdraw-slider {
-            width: 80%;
-            height: 40px;
+            width: 90%;
+            height: 50px;
         }
         .withdraw-button {
             background: #00d632;
             color: black;
-            padding: 15px;
-            font-size: 18px;
+            padding: 20px;
+            font-size: 22px;
             font-weight: bold;
             border: none;
-            border-radius: 10px;
-            margin-top: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
             cursor: pointer;
+            width: 80%;
         }
     </style>
 </head>
@@ -113,35 +116,21 @@
     <div class="container">
         <h2>Money</h2>
         <div class="section">
-            <p class="subtext">Cash balance</p>
+            <p class="subtext">Cash Balance</p>
             <p class="balance">$<span id="balance">500.00</span></p>
-            <p class="subtext">Account **** Routing ***</p>
             <div class="buttons">
-                <button class="button highlight" onclick="addMoney()">Add money</button>
+                <button class="button highlight" onclick="addMoney()">Add Money</button>
                 <button class="button" onclick="openWithdrawScreen()">Withdraw</button>
             </div>
         </div>
-        <div class="section">
-            <h3>Save</h3>
-            <p class="subtext">Savings</p>
-            <p class="balance">$0.00</p>
-            <p class="subtext">Up to 4% interest</p>
+        <div class="section" onclick="generateFakeAccountInfo()" style="cursor: pointer;">
+            <p id="account-info">Loading account info...</p>
         </div>
-        <h3>Explore</h3>
-        <div class="explore-section">
-            <div class="explore-item">
-                <p>Taxes</p>
-                <p>Pay $0 to file</p>
-            </div>
-            <div class="explore-item">
-                <p>Bitcoin</p>
-                <p>Learn and invest</p>
-            </div>
-            <div class="explore-item">
-                <p>Stocks</p>
-                <p>Invest with $1</p>
-            </div>
-        </div>
+        <div class="section">Savings</div>
+        <div class="section">Taxes</div>
+        <div class="section">Bitcoin</div>
+        <div class="section">Stocks</div>
+        <div class="section">Learn & Invest</div>
     </div>
     <div class="nav">
         <button>🏠</button>
@@ -151,9 +140,9 @@
         <button>🔔</button>
     </div>
     <div id="withdraw-screen" class="withdraw-screen">
-        <p>Select amount to withdraw</p>
+        <p style="font-size: 24px;">Select amount to withdraw</p>
         <input type="range" id="withdraw-slider" class="withdraw-slider" min="0" max="500" step="1" value="0" oninput="updateWithdrawAmount()">
-        <p id="withdraw-amount">Withdraw: $0</p>
+        <p id="withdraw-amount" style="font-size: 22px;">Withdraw: $0</p>
         <button class="withdraw-button" onclick="withdrawMoney()">Withdraw</button>
         <button class="button" onclick="closeWithdrawScreen()">Cancel</button>
     </div>
@@ -197,8 +186,16 @@
         function updateBalance() {
             document.getElementById('balance').innerText = balance.toFixed(2);
         }
+        function generateFakeAccountInfo() {
+            let account = localStorage.getItem("account") || `Account **${Math.floor(1000 + Math.random() * 9000)}`;
+            let routing = localStorage.getItem("routing") || `Routing **${Math.floor(100 + Math.random() * 900)}`;
+            localStorage.setItem("account", account);
+            localStorage.setItem("routing", routing);
+            document.getElementById("account-info").innerText = account + " " + routing;
+        }
         document.addEventListener("DOMContentLoaded", function() {
             closeWithdrawScreen();
+            generateFakeAccountInfo();
         });
     </script>
 </body>
